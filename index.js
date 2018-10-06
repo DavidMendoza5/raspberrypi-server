@@ -27,6 +27,9 @@ server.on('listening', onListening)
 socket.on('connection', (socket) => {
   socket.emit('Conn', { hello: 'Hello World!' })
   console.log(socket.id);
+  socket.on('COMMAND', (socket) => {
+    console.log(socket)
+  })
 });
 
 /**
