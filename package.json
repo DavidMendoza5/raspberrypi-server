@@ -1,0 +1,15 @@
+{
+  "name": "raspberry-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "express": "~4.16.0",
+    "hbs": "~4.0.1",
+    "http": "0.0.0",
+    "socket.io": "^2.1.1"
+  }
+}
