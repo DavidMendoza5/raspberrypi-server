@@ -27,12 +27,7 @@ socket.on('connection', (socket) => {
   socket.emit('Conn', { hello: 'Hello World!' })
   console.log(socket.id);
   socket.on('BLINK_LED', (io) => {
-<<<<<<< HEAD
-	console.log(io);
-    led.blink(io.time);
-=======
     leds.blink(io.time);
->>>>>>> 871de6ad995453e47772a8d5713b1be285171d02
   })
   socket.on('OFF_LED', (io) => {
     console.log(io)
