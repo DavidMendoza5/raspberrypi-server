@@ -19,7 +19,6 @@ var requestListener = function (req, res) {
 
 var server = http.createServer(requestListener);
 var io = require('socket.io-client')
-var socket = io('')
 var leds = require('./led')
 
 server.listen(port, url)
