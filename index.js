@@ -25,11 +25,6 @@ server.listen(port, url)
 server.on('listening', onListening)
 
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
-  socket.on('blink_led', function (data) {
-    console.log(data);
-    leds.blink(data.time);
-  });
-
 
 socket.on('blink_led', (io) => {
   console.log(io);
