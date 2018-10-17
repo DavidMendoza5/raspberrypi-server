@@ -29,7 +29,7 @@ socket.on('Conn', (io) => {
   console.log(io)
 })
 
-socket.on('BLINK_LED', (io) => {
+socket.on('blink_led', (io) => {
   console.log(io);
   leds.blink(io.time);
 })
