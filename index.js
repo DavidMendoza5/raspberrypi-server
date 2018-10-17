@@ -10,7 +10,7 @@ var http = require('http');
  * Create HTTP server.
  */
 
-const url = '192.168.0.107';
+const url = '10.64.130.124';
 var port = normalizePort(process.env.PORT || 3000);
 
 var requestListener = function (req, res) {
@@ -20,6 +20,12 @@ var requestListener = function (req, res) {
 
 var server = http.createServer(requestListener);
 const socket = require('socket.io')(server);
+var five = require("johnny-five");
+var Raspi = require("raspi-io");
+var board = new five.Board({
+  io: new Raspi()
+});
+
 
 server.listen(port, url);
 server.on('listening', onListening)
@@ -27,8 +33,16 @@ server.on('listening', onListening)
 socket.on('connection', (socket) => {
   socket.emit('Conn', { hello: 'Hello World!' })
   console.log(socket.id);
-  socket.on('COMMAND', (io) => {
-    console.log(io)
+  socket.on('BLINK_LED', (io) => {
+    	console.log(io)
+  	var led = new five.Led("P1-12");
+  	led.blink(500);
+  })
+socket.on('OFF_LED', (io) => {
+    	console.log(io)
+	var led = new five.Led("P1-12");
+	led.blink(500);
+	led.stop();
   })
 });
 
