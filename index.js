@@ -1,16 +1,15 @@
-
+'use strict'
 /**
  * Module dependencies.
  */
 
 const chalk = require('chalk')
 var http = require('http');
-
 /**
  * Create HTTP server.
  */
-
-const url = '10.64.130.124';
+var { IP_LOCAL } = require('./config')
+const url = IP_LOCAL
 var port = normalizePort(process.env.PORT || 3000);
 
 var requestListener = function (req, res) {
@@ -27,7 +26,7 @@ var board = new five.Board({
 });
 
 
-server.listen(port, url);
+server.listen(port, url)
 server.on('listening', onListening)
 
 socket.on('connection', (socket) => {
@@ -99,5 +98,5 @@ function onError(error) {
  */
 
 function onListening() {
-  console.log(`${chalk.green('[raspberry-pi]')} server listening on port ${port}`)
+  console.log(`${chalk.green('[raspberry-pi]')} server listening on ${url}:${port}`)
 }
