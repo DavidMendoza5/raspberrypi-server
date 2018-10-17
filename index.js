@@ -33,8 +33,7 @@ var led = new five.Led("P1-12");
   socket.emit('Conn', { hello: 'Hello World!' })
   console.log(socket.id);
   socket.on('BLINK_LED', (io) => {
-    console.log(io)
-    led.blink(500);
+    led.blink(io.time);
   })
   socket.on('OFF_LED', (io) => {
     console.log(io)
