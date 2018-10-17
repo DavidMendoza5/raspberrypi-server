@@ -18,7 +18,8 @@ var requestListener = function (req, res) {
 }
 
 var server = http.createServer(requestListener);
-var socket = require('socket.io-client')
+var io = require('socket.io-client')
+var socket = io('https://heroku-server-18.herokuapp.com')
 var leds = require('./led')
 var servo = require('./servo')
 
