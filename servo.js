@@ -1,4 +1,5 @@
 var jf = require('johnny-five')
+var Raspi = require("raspi-io");
 var board = new jf.Board({
     io: new Raspi()
 })
