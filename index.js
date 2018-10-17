@@ -33,15 +33,15 @@ socket.on('connection', (socket) => {
   socket.emit('Conn', { hello: 'Hello World!' })
   console.log(socket.id);
   socket.on('BLINK_LED', (io) => {
-    	console.log(io)
-  	var led = new five.Led("P1-12");
-  	led.blink(500);
+    console.log(io)
+    var led = new five.Led("P1-12");
+    led.blink(500);
   })
-socket.on('OFF_LED', (io) => {
-    	console.log(io)
-	var led = new five.Led("P1-12");
-	led.blink(500);
-	led.stop();
+  socket.on('OFF_LED', (io) => {
+    console.log(io)
+    var led = new five.Led("P1-12");
+    led.blink(500);
+    led.stop();
   })
 });
 
