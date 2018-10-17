@@ -1,12 +1,12 @@
 var five = require('johnny-five');
 var PiIO = require('pi-io');
-
+var servo 
 var board = new five.Board({
   io: new PiIO()
 });
 
 board.on('ready', function() {
-  var servo = new five.Servo(11);
+  servo = new five.Servo(11);
 });
 
 function on(degree) {
