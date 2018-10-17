@@ -19,85 +19,82 @@ var requestListener = function (req, res) {
 
 var server = http.createServer(requestListener);
 const socket = require('socket.io')(server);
-var five = require("johnny-five");
-var Raspi = require("raspi-io");
-var board = new five.Board({
-  io: new Raspi()
-});
-
-
+var leds = require('./led')
+var servo = require('./servo')
 server.listen(port, url)
 server.on('listening', onListening)
 socket.on('connection', (socket) => {
-var led = new five.Led("P1-12");
   socket.emit('Conn', { hello: 'Hello World!' })
   console.log(socket.id);
   socket.on('BLINK_LED', (io) => {
-    led.blink(io.time);
+    leds.blink(io.time);
   })
   socket.on('OFF_LED', (io) => {
     console.log(io)
-    led.stop();
-    led.off();
+    leds.off()
   })
   socket.on('ON_LED', (io) => {
     console.log(io)
     led.on();
   })
-});
+  socket.on('ON_SERVO', (io) => {
+    console.log(io)
+    servo.on(io.degree)
+  })
+})
 
-/**
- * Normalize a port into a number, string, or false.
- */
+  /**
+   * Normalize a port into a number, string, or false.
+   */
 
-function normalizePort(val) {
-  var port = parseInt(val, 10);
+  function normalizePort(val) {
+    var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
+    if (isNaN(port)) {
+      // named pipe
+      return val;
+    }
+
+    if (port >= 0) {
+      // port number
+      return port;
+    }
+
+    return false;
   }
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+  /**
+   * Event listener for HTTP server "error" event.
+   */
 
-  return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
+  function onError(error) {
+    if (error.syscall !== 'listen') {
       throw error;
+    }
+
+    var bind = typeof port === 'string'
+      ? 'Pipe ' + port
+      : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+      case 'EACCES':
+        console.error(bind + ' requires elevated privileges');
+        process.exit(1);
+        break;
+      case 'EADDRINUSE':
+        console.error(bind + ' is already in use');
+        process.exit(1);
+        break;
+      default:
+        throw error;
+    }
   }
-}
 
-/**
- * Event listener for HTTP server "listening" event.
- */
+  /**
+   * Event listener for HTTP server "listening" event.
+   */
 
-function onListening() {
-  console.log(`${chalk.green('[raspberry-pi]')} server listening on ${url}:${port}`)
-}
+  function onListening() {
+    console.log(`${chalk.green('[raspberry-pi]')} server listening on ${url}:${port}`)
+  }
