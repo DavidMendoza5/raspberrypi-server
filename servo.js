@@ -1,18 +1,20 @@
-var jf = require('johnny-five')
-var Raspi = require("raspi-io");
-var board = new jf.Board({
-    io: new Raspi()
-})
-var motor
+var five = require('johnny-five');
+var PiIO = require('pi-io');
 
-board.on('ready', onReady)
+var board = new five.Board({
+  io: new PiIO()
+});
 
-function onReady() {
-    motor = new jf.Servo('P1-12')
-}
+board.on('ready', function() {
+  var servo = new five.Servo({
+    pin: 'GPIO27',
+    type: "continuous"
+  });
+
+});
 
 function on(degree) {
-    motor.to(degree) // mover el servo de 0-180°
+  servo.cw(0.8)
 }
 
 module.exports = {
