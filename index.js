@@ -25,15 +25,15 @@ var leds = require('./led')
 server.listen(port, url)
 server.on('listening', onListening)
 
-socket.on('BLINK_LED', (io) => {
+socket.on('blink_led', (io) => {
   console.log(io);
   leds.blink(io.time);
 })
-socket.on('OFF_LED', (io) => {
+socket.on('off_led', (io) => {
   console.log(io)
   leds.off()
 })
-socket.on('ON_LED', (io) => {
+socket.on('on_led', (io) => {
   console.log(io)
   leds.on();
 })
