@@ -21,7 +21,6 @@ var server = http.createServer(requestListener);
 var io = require('socket.io-client')
 var socket = io('https://heroku-server-18.herokuapp.com')
 var leds = require('./led')
-var servo = require('./servo')
 
 server.listen(port, url)
 server.on('listening', onListening)
@@ -37,10 +36,6 @@ socket.on('OFF_LED', (io) => {
 socket.on('ON_LED', (io) => {
   console.log(io)
   leds.on();
-})
-socket.on('ON_SERVO', (io) => {
-  console.log(io)
-  servo.on(io.degree)
 })
 
 /**
