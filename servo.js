@@ -1,11 +1,13 @@
 var jf = require('johnny-five')
-var board = new jf.Board()
+var board = new jf.Board({
+    io: new Raspi()
+})
 var motor
 
 board.on('ready', onReady)
 
 function onReady() {
-    motor = new motor.Servo(12)
+    motor = new jf.Servo('P1-12')
 }
 
 function on(degree) {
