@@ -28,20 +28,22 @@ var board = new five.Board({
 
 server.listen(port, url)
 server.on('listening', onListening)
-
 socket.on('connection', (socket) => {
+var led = new five.Led("P1-12");
   socket.emit('Conn', { hello: 'Hello World!' })
   console.log(socket.id);
   socket.on('BLINK_LED', (io) => {
     console.log(io)
-    var led = new five.Led("P1-12");
     led.blink(500);
   })
   socket.on('OFF_LED', (io) => {
     console.log(io)
-    var led = new five.Led("P1-12");
-    led.blink(500);
     led.stop();
+    led.off();
+  })
+  socket.on('ON_LED', (io) => {
+    console.log(io)
+    led.on();
   })
 });
 
