@@ -5,8 +5,7 @@ var motor
 board.on('ready', onReady)
 
 function onReady() {
-    motor = new motor.Servo("P1-12")
-    
+    motor = new motor.Servo(12)
 }
 
 function on(degree) {
