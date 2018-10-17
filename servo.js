@@ -6,15 +6,11 @@ var board = new five.Board({
 });
 
 board.on('ready', function() {
-  var servo = new five.Servo({
-    pin: 'GPIO27',
-    type: "continuous"
-  });
-
+  var servo = new five.Servo(11);
 });
 
 function on(degree) {
-  servo.cw(0.8)
+  servo.to(180);
 }
 
 module.exports = {
