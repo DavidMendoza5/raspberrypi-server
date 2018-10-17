@@ -19,7 +19,7 @@ var requestListener = function (req, res) {
 
 var server = http.createServer(requestListener);
 var io = require('socket.io-client')
-var socket = io('https://heroku-server-18.herokuapp.com')
+var socket = io('https://heroku-server-18.herokuapp.com/')
 var leds = require('./led')
 
 server.listen(port, url)
@@ -27,12 +27,13 @@ server.on('listening', onListening)
 
 socket.on('Conn', (io) => {
   console.log(io)
+  socket.on('blink_led', (io) => {
+    console.log(io);
+    leds.blink(io.time);
+  })
 })
 
-socket.on('blink_led', (io) => {
-  console.log(io);
-  leds.blink(io.time);
-})
+
 socket.on('OFF_LED', (io) => {
   console.log(io)
   leds.off()
