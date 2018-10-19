@@ -5,26 +5,36 @@
 
 const chalk = require('chalk')
 var http = require('http');
+var debug = require('debug')('raspberry-pi:server');
 /**
  * Create HTTP server.
  */
-var { IP_LOCAL } = require('./config')
-const url = IP_LOCAL
+
+
 var port = normalizePort(process.env.PORT || 3000);
 
 var requestListener = function (req, res) {
   res.writeHead(200);
   res.end('Hello, World!\n');
 }
-
+let url
 var server = http.createServer(requestListener);
 var io = require('socket.io-client')
-var leds = require('./led')
+// var leds = require('./led')
 
-server.listen(port, url)
+
+require('dns').lookup(require('os').hostname(), async (err, add, fam) => {
+  server.listen(port, add)
+  url = add
+})
 server.on('listening', onListening)
 
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
+
+socket.on('Conn', (io) => {
+    socket.emit('IP', { url })
+    console.log(`${chalk.green('[hostaname]')} ${url}:${port}`)
+})
 
 socket.on('blink_led', (io) => {
   console.log(io);
