@@ -6,7 +6,7 @@ var board = new five.Board({
 });
 
 board.on('ready', function() {
-  servo = new five.Servo(11);
+  servo = new five.Servo("P1-12");
 });
 
 function on(degree) {
