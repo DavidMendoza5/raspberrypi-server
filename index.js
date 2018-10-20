@@ -20,7 +20,7 @@ var requestListener = function (req, res) {
 let url
 var server = http.createServer(requestListener);
 var io = require('socket.io-client')
-// var leds = require('./led')
+var leds = require('./led')
 const exec = require('child_process').exec;
 
 
@@ -36,6 +36,7 @@ exec('hostname -I', async (error, stdout, stderr) => {
     console.error(`exec error: ${error}`);
     return;
   }
+  url = stdout.split(' ')[0]
   console.log(`stdout: ${stdout.split(' ')[0]}`);
   console.log(`stderr: ${stderr}`);
 });
