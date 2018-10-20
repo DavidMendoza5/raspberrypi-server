@@ -20,20 +20,33 @@ var requestListener = function (req, res) {
 let url
 var server = http.createServer(requestListener);
 var io = require('socket.io-client')
-var leds = require('./led')
+// var leds = require('./led')
+const exec = require('child_process').exec;
+
 
 
 require('dns').lookup(require('os').hostname(), async (err, add, fam) => {
   server.listen(port, add)
   url = add
 })
+
+
+exec('hostname -I', async (error, stdout, stderr) => {
+  if (error) {
+    console.error(`exec error: ${error}`);
+    return;
+  }
+  console.log(`stdout: ${stdout.split(' ')[0]}`);
+  console.log(`stderr: ${stderr}`);
+});
+
 server.on('listening', onListening)
 
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
 
 socket.on('Conn', (io) => {
     socket.emit('IP', { url })
-    console.log(`${chalk.green('[hostaname]')} ${url}:${port}`)
+    console.log(`${chalk.green('[hostname]')} ${url}:${port}`)
 })
 
 socket.on('blink_led', (io) => {
