@@ -26,6 +26,7 @@ var leds = require('./led')
 require('dns').lookup(require('os').hostname(), async (err, add, fam) => {
   server.listen(port, add)
   url = add
+  console.log(url)
 })
 server.on('listening', onListening)
 
