@@ -24,13 +24,13 @@ var leds = require('./led')
 const exec = require('child_process').exec;
 
 
-
+/*
 require('dns').lookup(require('os').hostname(), async (err, add, fam) => {
   server.listen(port, add)
   url = add
   console.log(url)
 })
-
+*/
 
 exec('hostname -I', async (error, stdout, stderr) => {
   if (error) {
@@ -42,14 +42,14 @@ exec('hostname -I', async (error, stdout, stderr) => {
   console.log(`stderr: ${stderr}`);
 });
 
-server.on('listening', onListening)
-
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
 
 socket.on('Conn', (io) => {
     socket.emit('IP', { url })
-    console.log(`${chalk.green('[hostname]')} ${url}:${port}`)
+    console.log(`${chalk.green('[raspberrypi-hostname]')} ${url}:${port}`)
 })
+
+server.on('listening', onListening) 
 
 socket.on('blink_led', (io) => {
   console.log(io);
@@ -117,6 +117,6 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening() {
+async function onListening() {
   console.log(`${chalk.green('[raspberry-pi]')} server listening on ${url}:${port}`)
 }
