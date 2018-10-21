@@ -24,7 +24,14 @@ let url
 var server = http.createServer(requestListener);
 var io = require('socket.io-client')
 var leds
-if (os.arch() == 'arm') leds = require('./led')
+if (os.arch() == 'arm') {
+  try {
+    leds = require('./led')
+  } catch (error) {
+    console.log(error.stack)
+  }
+  
+}
 const exec = require('child_process').exec;
 
 
