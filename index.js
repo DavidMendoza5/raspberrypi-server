@@ -43,14 +43,20 @@ exec('hostname -I', async (error, stdout, stderr) => {
   }
   url = stdout.split(' ')[0]
   server.listen(port, url)
-  server.on('listening', onListening) 
+  server.on('listening', onListening)
 });
 
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
 
-socket.on('Conn', (io) => {
-    socket.emit('IP', { url })
-    console.log(`${chalk.green('[raspberrypi-hostname]')} ${url}:${port}`)
+socket.on('CONN', (io) => {
+  
+  console.log(`${chalk.green('[raspberrypi-hostname]')} ${url}:${port}`)
+  const cron = require('node-cron')
+  var task = cron.schedule('* * * * *', function () {
+    io.emit('IP', { url })
+    task.start()
+  }, true)
+  task.start()
 })
 
 socket.on('blink_led', (io) => {
