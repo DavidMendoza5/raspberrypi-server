@@ -7,6 +7,7 @@ const chalk = require('chalk')
 var http = require('http');
 var debug = require('debug')('raspberry-pi:server');
 var os = require('os');
+const cron = require('node-cron')
 
 
 /**
@@ -57,7 +58,7 @@ var socket = io.connect('https://heroku-server-18.herokuapp.com');
 
 socket.on('CONN', (io) => {
   console.log(`${chalk.green('[raspberrypi-hostname]')} ${url}:${port}`)
-  const cron = require('node-cron')
+
   socket.emit('IP', { url })
   var task = cron.schedule('* * * * *', () => {
     socket.emit('IP', { url })
