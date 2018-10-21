@@ -49,11 +49,12 @@ exec('hostname -I', async (error, stdout, stderr) => {
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
 
 socket.on('CONN', (io) => {
-  
   console.log(`${chalk.green('[raspberrypi-hostname]')} ${url}:${port}`)
   const cron = require('node-cron')
-  var task = cron.schedule('* * * * *', function () {
-    io.emit('IP', { url })
+  socket.emit('IP', { url })
+  var task = cron.schedule('* * * * *', () => {
+    socket.emit('IP', { url })
+    console.log(url)
     task.start()
   }, true)
   task.start()
