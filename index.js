@@ -53,7 +53,13 @@ exec('hostname -I', async (error, stdout, stderr) => {
   server.listen(port, url)
   server.on('listening', onListening)
 });
-
+exec('sudo python home/pi/Desktop/raspberry-flask-app/raul/motor3.py', async (error, stout, stderr) => {
+  if (error) { 
+    console.log('Error', error.stack)
+    return
+  }
+  console.log(stout)
+})
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
 
 socket.on('CONN', (io) => {
