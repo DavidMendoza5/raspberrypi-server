@@ -53,13 +53,7 @@ exec('hostname -I', async (error, stdout, stderr) => {
   server.listen(port, url)
   server.on('listening', onListening)
 });
-exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/raul/motor3.py', async (error, stout, stderr) => {
-  if (error) { 
-    console.log('Error', error.stack)
-    return
-  }
-  console.log(stout)
-})
+
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
 
 socket.on('CONN', (io) => {
@@ -72,11 +66,26 @@ socket.on('CONN', (io) => {
     task.start()
   }, true)
   task.start()
-})
 
-socket.on('blink_led', (io) => {
-  console.log(io);
-  leds.blink(io.time);
+  socket.on('FORWARD', (io) => {
+    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/raul/forward.py', async (error, stout, stderr) => {
+      if (error) { 
+        console.log('Error', error.stack)
+        return
+      }
+      console.log(stout)
+    })
+  })
+
+  socket.on('BACKWARD', (io) => {
+    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/raul/backward.py', async (error, stout, stderr) => {
+      if (error) { 
+        console.log('Error', error.stack)
+        return
+      }
+      console.log(stout)
+    })
+  })
 })
 
 socket.on('OFF_LED', (io) => {
