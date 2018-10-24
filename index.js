@@ -53,7 +53,7 @@ exec('hostname -I', async (error, stdout, stderr) => {
   server.listen(port, url)
   server.on('listening', onListening)
 });
-exec('sudo python home/pi/Desktop/raspberry-flask-app/raul/motor3.py', async (error, stout, stderr) => {
+exec('sudo python /home/pi/Desktop/raspberry-flask-app/raul/motor3.py', async (error, stout, stderr) => {
   if (error) { 
     console.log('Error', error.stack)
     return
