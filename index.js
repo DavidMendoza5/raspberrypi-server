@@ -76,9 +76,17 @@ socket.on('CONN', (io) => {
       console.log(stout)
     })
   })
+
+  socket.on('BACKWARD', (io) => {
+    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/raul/backward.py', async (error, stout, stderr) => {
+      if (error) { 
+        console.log('Error', error.stack)
+        return
+      }
+      console.log(stout)
+    })
+  })
 })
-
-
 
 socket.on('OFF_LED', (io) => {
   console.log(io)
