@@ -7,7 +7,7 @@ const chalk = require('chalk')
 var http = require('http');
 var debug = require('debug')('raspberry-pi:server');
 var os = require('os');
-const cron = require('node-cron')
+let cron = require('node-cron')
 
 
 /**
@@ -28,10 +28,11 @@ var leds
 if (os.arch() == 'arm') {
   try {
     leds = require('./led')
+    cron = require('node-cron')
   } catch (error) {
     console.log(error.stack)
   }
-  
+
 }
 const exec = require('child_process').exec;
 
@@ -68,9 +69,9 @@ socket.on('CONN', (io) => {
   task.start()
 
   socket.on('FORWARD', (io) => {
-    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/raul/forward.py', async (error, stout, stderr) => {
-      if (error) { 
-        console.log('Error', error.stack)
+    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/forward.py', async (error, stout, stderr) => {
+      if (error) {
+        console.log(error.stack, io)
         return
       }
       console.log(stout)
@@ -78,9 +79,39 @@ socket.on('CONN', (io) => {
   })
 
   socket.on('BACKWARD', (io) => {
-    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/raul/backward.py', async (error, stout, stderr) => {
-      if (error) { 
-        console.log('Error', error.stack)
+    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/backward.py', async (error, stout, stderr) => {
+      if (error) {
+        console.log(error.stack, io)
+        return
+      }
+      console.log(stout)
+    })
+  })
+
+  socket.on('RIGHT', (io) => {
+    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/right.py', async (error, stout, stderr) => {
+      if (error) {
+        console.log(error.stack, io)
+        return
+      }
+      console.log(stout)
+    })
+  })
+
+  socket.on('LEFT', (io) => {
+    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/left.py', async (error, stout, stderr) => {
+      if (error) {
+        console.log(error.stack, io)
+        return
+      }
+      console.log(stout)
+    })
+  })
+
+  socket.on('STOP', (io) => {
+    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/stop.py', async (error, stout, stderr) => {
+      if (error) {
+        console.log(error.stack, io)
         return
       }
       console.log(stout)
