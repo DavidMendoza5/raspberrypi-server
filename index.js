@@ -70,7 +70,7 @@ socket.on('CONN', (io) => {
 
   setInterval(async () => {
     socket.emit('SYSTEM', {
-      ram: process.memoryUsage()
+      memory: process.memoryUsage()
     })
   }, 5000);
 
