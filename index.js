@@ -110,7 +110,17 @@ socket.on('CONN', (io) => {
       console.log(stout)
     })
   })
-  
+
+  socket.on('PHOTO', (io) => {
+    console.log(io)
+    exec(`sudo raspistill -o foto.jpg`, async (error, stout, stderr) => {
+      if (error) {
+        console.log(error.stack, io)
+        return
+      }
+      console.log(stout)
+    })
+  })
 
   socket.on('FORWARD', (io) => {
     exec(`sudo python ${CARPATH}forward.py`, async (error, stout, stderr) => {
