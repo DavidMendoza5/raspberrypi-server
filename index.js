@@ -56,7 +56,6 @@ exec('hostname -I', async (error, stdout, stderr) => {
 });
 
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
-require('./bot.js')
 
 socket.on('CONN', (io) => {
   console.log(`${chalk.green('[raspberrypi-hostname]')} ${url}:${port}`)
@@ -76,28 +75,44 @@ socket.on('CONN', (io) => {
         total: os.totalmem()
       }
     })
-  }, 1000);
+  }, 2000);
 
 
   var request = require('request')
+  const endpoint = 'https://beta.soldai.com/bill-cipher/'
+  const key = 'd581f48bf83560b991076417fcb61f9470e6e490'
+  const id = 'WEB_8a5603b7-fd3d-4dca-81fc-2923eb691354'
+  const CARPATH = '/home/pi/Desktop/raspberrypi-flask-app/car/'
+  const CAMERAPATH = '/home/pi/Desktop/raspberrypi-flask-app/camera/'
 
-  socket.on('onMessage', (io) => {
-    var msg = "Muevete a la derecha, por favor"
-    request(`https://beta.soldai.com/bill-cipher/askquestion?key=d581f48bf83560b991076417fcb61f9470e6e490&num_intents=1&log=0&session_id=WEB_8a5603b7-fd3d-4dca-81fc-2923eb691354&question=${msg}`, (error, response, body) => {
+  socket.on('MESSAGE', (io) => {
+    var msg = io.msg
+    request(`${endpoint}askquestion?key=${key}&num_intents=1&log=0&session_id=${id}&question=${msg}`, (error, response, body) => {
       console.log('error:', error);
       console.log('statusCode:', response && response.statusCode)
       var obj = JSON.parse(body).current_response
-      var msg = obj.message
+      var answer = obj.message
       var key = obj.intent_name
       console.log('Question:', obj.resolvedQuery);
-      console.log('Answer:', msg);
+      console.log('Answer:', answer);
       console.log('Key:', key);
+      socket.emit('ANSWER', { answer })
     });
-    socket.emit('onAnswer', { io })
   })
 
+  socket.on('CAMERA', (io) => {
+    exec(`sudo python ${CAMERAPATH}${io.file}.py`, async (error, stout, stderr) => {
+      if (error) {
+        console.log(error.stack, io)
+        return
+      }
+      console.log(stout)
+    })
+  })
+  
+
   socket.on('FORWARD', (io) => {
-    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/forward.py', async (error, stout, stderr) => {
+    exec(`sudo python ${CARPATH}forward.py`, async (error, stout, stderr) => {
       if (error) {
         console.log(error.stack, io)
         return
@@ -107,7 +122,7 @@ socket.on('CONN', (io) => {
   })
 
   socket.on('BACKWARD', (io) => {
-    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/backward.py', async (error, stout, stderr) => {
+    exec(`sudo python ${CARPATH}backward.py`, async (error, stout, stderr) => {
       if (error) {
         console.log(error.stack, io)
         return
@@ -117,7 +132,7 @@ socket.on('CONN', (io) => {
   })
 
   socket.on('RIGHT', (io) => {
-    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/right.py', async (error, stout, stderr) => {
+    exec(`sudo python ${CARPATH}right.py`, async (error, stout, stderr) => {
       if (error) {
         console.log(error.stack, io)
         return
@@ -127,7 +142,7 @@ socket.on('CONN', (io) => {
   })
 
   socket.on('LEFT', (io) => {
-    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/left.py', async (error, stout, stderr) => {
+    exec(`sudo python ${CARPATH}left.py`, async (error, stout, stderr) => {
       if (error) {
         console.log(error.stack, io)
         return
@@ -137,7 +152,7 @@ socket.on('CONN', (io) => {
   })
 
   socket.on('STOP', (io) => {
-    exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/stop.py', async (error, stout, stderr) => {
+    exec(`sudo python ${CARPATH}stop.py`, async (error, stout, stderr) => {
       if (error) {
         console.log(error.stack, io)
         return
