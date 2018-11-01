@@ -72,7 +72,6 @@ socket.on('CONN', (io) => {
     console.log(os.cpus());
     console.log(os.totalmem());
     console.log(os.freemem())
-    console.log(os.memory())
     console.log(os.memoryUsage())
     socket.emit('SYSTEM', {
       memory: process.memoryUsage()
