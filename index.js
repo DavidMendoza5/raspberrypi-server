@@ -101,7 +101,8 @@ socket.on('CONN', (io) => {
   })
 
   socket.on('CAMERA', (io) => {
-    exec(`sudo python ${CAMERAPATH}${io.file}.py`, async (error, stout, stderr) => {
+    console.log(io)
+    exec(`sudo python ${CAMERAPATH}${io.msg.file}.py`, async (error, stout, stderr) => {
       if (error) {
         console.log(error.stack, io)
         return
