@@ -76,7 +76,7 @@ socket.on('CONN', (io) => {
         total: os.totalmem()
       }
     })
-  }, 5000);
+  }, 1000);
 
 
   var request = require('request')
