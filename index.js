@@ -50,16 +50,16 @@ exec('hostname -I', async (error, stdout, stderr) => {
     console.error(`exec error: ${error}`);
     return
   }
-  url = stdout.split(' ')[0]
+  url = await stdout.split(' ')[0]
   server.listen(port, url)
   server.on('listening', onListening)
 });
 
 var socket = io.connect('https://heroku-server-18.herokuapp.com');
+require('./bot.js')
 
 socket.on('CONN', (io) => {
   console.log(`${chalk.green('[raspberrypi-hostname]')} ${url}:${port}`)
-
   socket.emit('IP', { url })
   var task = cron.schedule('* * * * *', () => {
     socket.emit('IP', { url })
@@ -67,6 +67,30 @@ socket.on('CONN', (io) => {
     task.start()
   }, true)
   task.start()
+  
+  setInterval(async () => {
+    socket.emit('SYSTEM', {
+      ram: process.memoryUsage().rss
+    })
+  }, 1000);
+
+
+  var request = require('request')
+
+  socket.on('onMessage', (io) => {
+    var msg = "Muevete a la derecha, por favor"
+    request(`https://beta.soldai.com/bill-cipher/askquestion?key=d581f48bf83560b991076417fcb61f9470e6e490&num_intents=1&log=0&session_id=WEB_8a5603b7-fd3d-4dca-81fc-2923eb691354&question=${msg}`, (error, response, body) => {
+      console.log('error:', error);
+      console.log('statusCode:', response && response.statusCode)
+      var obj = JSON.parse(body).current_response
+      var msg = obj.message
+      var key = obj.intent_name
+      console.log('Question:', obj.resolvedQuery);
+      console.log('Answer:', msg);
+      console.log('Key:', key);
+    });
+    socket.emit('onAnswer', { io })
+  })
 
   socket.on('FORWARD', (io) => {
     exec('sudo python /home/pi/Desktop/raspberrypi-flask-app/car/forward.py', async (error, stout, stderr) => {
@@ -117,15 +141,6 @@ socket.on('CONN', (io) => {
       console.log(stout)
     })
   })
-})
-
-socket.on('OFF_LED', (io) => {
-  console.log(io)
-  leds.off()
-})
-socket.on('ON_LED', (io) => {
-  console.log(io)
-  leds.on();
 })
 
 /**
@@ -183,3 +198,5 @@ function onError(error) {
 async function onListening() {
   console.log(`${chalk.green('[raspberry-pi]')} server listening on ${url}:${port}`)
 }
+
+module.exports = socket
