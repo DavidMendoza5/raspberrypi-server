@@ -67,12 +67,12 @@ socket.on('CONN', (io) => {
     task.start()
   }, true)
   task.start()
-  
+
   setInterval(async () => {
     socket.emit('SYSTEM', {
-      ram: process.memoryUsage().rss
+      ram: process.memoryUsage()
     })
-  }, 1000);
+  }, 5000);
 
 
   var request = require('request')
