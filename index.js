@@ -87,6 +87,7 @@ socket.on('CONN', (io) => {
 
   socket.on('MESSAGE', (io) => {
     var msg = io.msg
+    console.log(io)
     request(`${endpoint}askquestion?key=${key}&num_intents=1&log=0&session_id=${id}&question=${msg}`, (error, response, body) => {
       console.log('error:', error);
       console.log('statusCode:', response && response.statusCode)
@@ -97,6 +98,13 @@ socket.on('CONN', (io) => {
       console.log('Answer:', answer);
       console.log('Key:', key);
       socket.emit('ANSWER', { answer })
+      exec(`sudo python ${CARPATH}${key}.py`, async (error, stout, stderr) => {
+        if (error) {
+          console.log(error.stack, io)
+          return
+        }
+        console.log(stout)
+      })
     });
   })
 
